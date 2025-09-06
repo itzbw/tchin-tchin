@@ -11,11 +11,12 @@ import {
 } from "react-native";
 import { CocktailCard } from "../components/cocktail/CocktailCard";
 import { SearchBar } from "../components/search/SearchBar";
+import { useFavorites } from "../hooks/useFavorites";
 import { useSearch } from "../hooks/useSearch";
+import type { RootStackParamList } from "../navigation/AppNavigator";
 import { useSearchCocktailsQuery } from "../store/api/cocktailApi";
 import { colors } from "../styles/colors";
 import type { Cocktail } from "../types/cocktail";
-import type { RootStackParamList } from "../types/navigation";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -23,6 +24,7 @@ export const HomeScreen: React.FC = () => {
 	const navigation = useNavigation<NavigationProp>();
 	const { searchInput, setSearchInput, searchTerm, handleSearch, handleClear } =
 		useSearch();
+	const { isFavorite, toggleFavorite } = useFavorites();
 	const { data, error, isLoading } = useSearchCocktailsQuery(searchTerm);
 
 	const cocktails = data?.drinks || [];
@@ -36,9 +38,15 @@ export const HomeScreen: React.FC = () => {
 
 	const renderCocktailItem = useCallback(
 		({ item }: { item: Cocktail }) => (
-			<CocktailCard cocktail={item} onPress={handleCocktailPress} />
+			<CocktailCard
+				cocktail={item}
+				onPress={handleCocktailPress}
+				showFavoriteButton={true}
+				isFavorite={isFavorite(item.idDrink)}
+				onFavoriteToggle={toggleFavorite}
+			/>
 		),
-		[handleCocktailPress],
+		[handleCocktailPress, isFavorite, toggleFavorite],
 	);
 
 	const keyExtractor = useCallback((item: Cocktail) => item.idDrink, []);
@@ -84,6 +92,7 @@ export const HomeScreen: React.FC = () => {
 					contentContainerStyle={styles.listContent}
 					showsVerticalScrollIndicator={false}
 					ListEmptyComponent={EmptyComponent}
+					// Basic performance optimizations
 					initialNumToRender={6}
 					maxToRenderPerBatch={6}
 					windowSize={5}

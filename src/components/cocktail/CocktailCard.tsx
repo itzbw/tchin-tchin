@@ -42,6 +42,7 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 					<TouchableOpacity
 						style={styles.favoriteButton}
 						onPress={() => onFavoriteToggle?.(cocktail)}
+						hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
 					>
 						<Ionicons
 							name={isFavorite ? "heart" : "heart-outline"}
