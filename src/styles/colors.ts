@@ -6,20 +6,10 @@ export const colors = {
 	text: "#333333",
 	textSecondary: "#666666",
 	border: "#e9ecef",
-	error: "#cc1414ff",
-};
+	error: "#FF6B6B",
+	success: "#28a745",
+	warning: "#ffc107",
+	info: "#17a2b8",
+} as const;
 
-export const SPACING = {
-	xs: 4,
-	sm: 8,
-	md: 12,
-	lg: 16,
-	xl: 20,
-	xxl: 24,
-};
-
-export const FONTS = {
-	regular: "400",
-	medium: "500",
-	bold: "700",
-};
+export type Color = keyof typeof colors;

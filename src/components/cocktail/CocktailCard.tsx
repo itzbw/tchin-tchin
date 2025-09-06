@@ -2,6 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../styles/colors";
+import { layout, spacing } from "../../styles/spacing";
+import { typography } from "../../styles/typography";
 import type { Cocktail } from "../../types/cocktail";
 
 interface CocktailCardProps {
@@ -66,43 +68,38 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
 		backgroundColor: colors.white,
-		borderRadius: 12,
-		padding: 16,
-		marginVertical: 6,
+		borderRadius: layout.borderRadius.lg,
+		padding: spacing.lg,
+		marginVertical: spacing.sm,
 		alignItems: "center",
-		// Simple shadow
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 3,
+		...layout.shadow.md,
 	},
 	image: {
 		width: 60,
 		height: 60,
-		borderRadius: 8,
-		marginRight: 16,
+		borderRadius: layout.borderRadius.md,
+		marginRight: spacing.lg,
 	},
 	info: {
 		flex: 1,
 	},
 	name: {
-		fontSize: 18,
-		fontWeight: "bold",
+		fontSize: typography.sizes.lg,
+		fontWeight: typography.weights.bold,
 		color: colors.text,
-		marginBottom: 4,
+		marginBottom: spacing.xs,
 	},
 	category: {
-		fontSize: 14,
+		fontSize: typography.sizes.sm,
 		color: colors.primary,
-		marginBottom: 2,
-		fontWeight: "500",
+		marginBottom: 3,
+		fontWeight: typography.weights.medium,
 	},
 	type: {
-		fontSize: 14,
+		fontSize: typography.sizes.sm,
 		color: colors.textSecondary,
 	},
 	favoriteButton: {
-		padding: 8,
+		padding: spacing.sm,
 	},
 });

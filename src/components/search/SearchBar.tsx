@@ -2,6 +2,8 @@ import { Ionicons } from "@expo/vector-icons";
 import type React from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { colors } from "../../styles/colors";
+import { layout, spacing } from "../../styles/spacing";
+import { typography } from "../../styles/typography";
 
 interface SearchBarProps {
 	value: string;
@@ -55,26 +57,22 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		backgroundColor: colors.white,
-		borderRadius: 25,
-		paddingHorizontal: 16,
-		paddingVertical: 12,
-		// Simple shadow
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 3,
+		borderRadius: layout.borderRadius.full,
+		paddingHorizontal: spacing.lg,
+		paddingVertical: spacing.md,
+		...layout.shadow.md,
 	},
 	searchIcon: {
-		marginRight: 8,
+		marginRight: spacing.sm,
 	},
 	input: {
 		flex: 1,
-		fontSize: 16,
+		fontSize: typography.sizes.base,
 		color: colors.text,
+		fontWeight: typography.weights.normal,
 	},
 	clearButton: {
-		marginLeft: 8,
+		marginLeft: spacing.sm,
 		padding: 4,
 	},
 });

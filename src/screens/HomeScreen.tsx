@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type React from "react";
@@ -16,6 +17,8 @@ import { useSearch } from "../hooks/useSearch";
 import type { RootStackParamList } from "../navigation/AppNavigator";
 import { useSearchCocktailsQuery } from "../store/api/cocktailApi";
 import { colors } from "../styles/colors";
+import { spacing } from "../styles/spacing";
+import { typography } from "../styles/typography";
 import type { Cocktail } from "../types/cocktail";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -53,6 +56,12 @@ export const HomeScreen: React.FC = () => {
 
 	const EmptyComponent = () => (
 		<View style={styles.emptyContainer}>
+			<Ionicons
+				name="wine"
+				size={64}
+				color={colors.textSecondary}
+				style={styles.emptyIcon}
+			/>
 			<Text style={styles.emptyTitle}>No cocktails found</Text>
 			<Text style={styles.emptySubtext}>Try searching for something else</Text>
 		</View>
@@ -61,6 +70,12 @@ export const HomeScreen: React.FC = () => {
 	if (error) {
 		return (
 			<View style={styles.errorContainer}>
+				<Ionicons
+					name="alert-circle"
+					size={48}
+					color={colors.error}
+					style={styles.errorIcon}
+				/>
 				<Text style={styles.errorTitle}>Failed to load cocktails</Text>
 				<Text style={styles.errorSubtext}>Please check your connection</Text>
 			</View>
@@ -92,7 +107,6 @@ export const HomeScreen: React.FC = () => {
 					contentContainerStyle={styles.listContent}
 					showsVerticalScrollIndicator={false}
 					ListEmptyComponent={EmptyComponent}
-					// Basic performance optimizations
 					initialNumToRender={6}
 					maxToRenderPerBatch={6}
 					windowSize={5}
@@ -109,60 +123,68 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.background,
 	},
 	searchContainer: {
-		paddingHorizontal: 16,
-		paddingTop: 16,
-		paddingBottom: 8,
+		paddingHorizontal: spacing.lg,
+		paddingTop: spacing.lg,
+		paddingBottom: spacing.sm,
 	},
 	loadingContainer: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		padding: 20,
+		padding: spacing.xl,
 	},
 	loadingText: {
-		marginTop: 12,
-		fontSize: 16,
+		marginTop: spacing.lg,
+		fontSize: typography.sizes.base,
 		color: colors.textSecondary,
 	},
 	errorContainer: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		padding: 20,
+		padding: spacing.xl,
+	},
+	errorIcon: {
+		marginBottom: spacing.lg,
 	},
 	errorTitle: {
-		fontSize: 20,
-		fontWeight: "bold",
+		fontSize: typography.sizes.xl,
+		fontWeight: typography.weights.bold,
 		color: colors.error,
 		textAlign: "center",
-		marginBottom: 8,
+		marginBottom: spacing.sm,
 	},
 	errorSubtext: {
-		fontSize: 16,
+		fontSize: typography.sizes.base,
 		color: colors.textSecondary,
 		textAlign: "center",
 	},
 	listContent: {
-		paddingHorizontal: 16,
-		paddingBottom: 20,
+		paddingHorizontal: spacing.lg,
+		paddingBottom: spacing.xl,
 	},
 	emptyContainer: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		padding: 40,
+		paddingHorizontal: spacing.xxxxl,
+		paddingVertical: spacing.xxxxl,
 		marginTop: 60,
 	},
+	emptyIcon: {
+		marginBottom: spacing.lg,
+	},
 	emptyTitle: {
-		fontSize: 20,
-		fontWeight: "bold",
+		fontSize: typography.sizes.xl,
+		fontWeight: typography.weights.bold,
 		color: colors.text,
 		textAlign: "center",
-		marginBottom: 8,
+		marginBottom: spacing.sm,
 	},
 	emptySubtext: {
-		fontSize: 16,
+		fontSize: typography.sizes.base,
 		color: colors.textSecondary,
 		textAlign: "center",
+		lineHeight: typography.sizes.base * typography.lineHeights.relaxed,
 	},
 });
