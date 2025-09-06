@@ -7,10 +7,19 @@ import type { Cocktail } from "../../types/cocktail";
 interface CocktailCardProps {
 	cocktail: Cocktail;
 	onPress: (id: string) => void;
+	showFavoriteButton?: boolean;
+	isFavorite?: boolean;
+	onFavoriteToggle?: (cocktail: Cocktail) => void;
 }
 
 export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
-	({ cocktail, onPress }) => {
+	({
+		cocktail,
+		onPress,
+		showFavoriteButton = false,
+		isFavorite = false,
+		onFavoriteToggle,
+	}) => {
 		return (
 			<TouchableOpacity
 				style={styles.container}
@@ -29,11 +38,24 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 					<Text style={styles.category}>{cocktail.strCategory}</Text>
 					<Text style={styles.type}>{cocktail.strAlcoholic}</Text>
 				</View>
-				<Ionicons
-					name="chevron-forward"
-					size={24}
-					color={colors.textSecondary}
-				/>
+				{showFavoriteButton ? (
+					<TouchableOpacity
+						style={styles.favoriteButton}
+						onPress={() => onFavoriteToggle?.(cocktail)}
+					>
+						<Ionicons
+							name={isFavorite ? "heart" : "heart-outline"}
+							size={24}
+							color={isFavorite ? colors.secondary : colors.textSecondary}
+						/>
+					</TouchableOpacity>
+				) : (
+					<Ionicons
+						name="chevron-forward"
+						size={24}
+						color={colors.textSecondary}
+					/>
+				)}
 			</TouchableOpacity>
 		);
 	},
@@ -78,5 +100,8 @@ const styles = StyleSheet.create({
 	type: {
 		fontSize: 14,
 		color: colors.textSecondary,
+	},
+	favoriteButton: {
+		padding: 8,
 	},
 });

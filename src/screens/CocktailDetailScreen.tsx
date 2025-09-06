@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { type RouteProp, useRoute } from "@react-navigation/native";
 import type React from "react";
 import {
@@ -6,22 +7,27 @@ import {
 	ScrollView,
 	StyleSheet,
 	Text,
+	TouchableOpacity,
 	View,
 } from "react-native";
+import { useFavorites } from "../hooks/useFavorite";
+import type { RootStackParamList } from "../navigation/AppNavigator";
 import { useGetCocktailByIdQuery } from "../store/api/cocktailApi";
 import { colors } from "../styles/colors";
 import type { Ingredient } from "../types/cocktail";
-import type { RootStackParamList } from "../types/navigation";
 
 type CocktailDetailRouteProp = RouteProp<RootStackParamList, "CocktailDetail">;
 
 export const CocktailDetailScreen: React.FC = () => {
 	const route = useRoute<CocktailDetailRouteProp>();
 	const { cocktailId } = route.params;
+	const { isFavorite, toggleFavorite } = useFavorites();
 	const { data, error, isLoading } = useGetCocktailByIdQuery(cocktailId);
 
 	const cocktail = data?.drinks?.[0];
+	const isCurrentlyFavorite = cocktail ? isFavorite(cocktail.idDrink) : false;
 
+	// Simple ingredient extraction
 	const extractIngredients = (): Ingredient[] => {
 		if (!cocktail) return [];
 
@@ -42,6 +48,12 @@ export const CocktailDetailScreen: React.FC = () => {
 
 	const ingredients = extractIngredients();
 
+	const handleFavoriteToggle = () => {
+		if (cocktail) {
+			toggleFavorite(cocktail);
+		}
+	};
+
 	if (isLoading) {
 		return (
 			<View style={styles.centerContainer}>
@@ -55,7 +67,6 @@ export const CocktailDetailScreen: React.FC = () => {
 		return (
 			<View style={styles.centerContainer}>
 				<Text style={styles.errorText}>Failed to load cocktail details</Text>
-				<Text style={styles.errorSubtext}>Please try again</Text>
 			</View>
 		);
 	}
@@ -66,8 +77,20 @@ export const CocktailDetailScreen: React.FC = () => {
 				<Image
 					source={{ uri: cocktail.strDrinkThumb }}
 					style={styles.cocktailImage}
-					resizeMode="cover"
 				/>
+				<TouchableOpacity
+					style={[
+						styles.favoriteButton,
+						isCurrentlyFavorite && styles.favoriteButtonActive,
+					]}
+					onPress={handleFavoriteToggle}
+				>
+					<Ionicons
+						name={isCurrentlyFavorite ? "heart" : "heart-outline"}
+						size={28}
+						color={isCurrentlyFavorite ? colors.white : colors.primary}
+					/>
+				</TouchableOpacity>
 			</View>
 
 			<View style={styles.contentContainer}>
@@ -124,6 +147,7 @@ const styles = StyleSheet.create({
 		padding: 20,
 	},
 	imageContainer: {
+		position: "relative",
 		alignItems: "center",
 		paddingVertical: 24,
 		backgroundColor: colors.white,
@@ -134,6 +158,26 @@ const styles = StyleSheet.create({
 		borderRadius: 75,
 		borderWidth: 4,
 		borderColor: colors.primary,
+	},
+	favoriteButton: {
+		position: "absolute",
+		top: 30,
+		right: 20,
+		width: 56,
+		height: 56,
+		borderRadius: 28,
+		backgroundColor: colors.white,
+		justifyContent: "center",
+		alignItems: "center",
+		// Simple shadow
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 6,
+		elevation: 5,
+	},
+	favoriteButtonActive: {
+		backgroundColor: colors.primary,
 	},
 	contentContainer: {
 		padding: 20,
@@ -211,15 +255,8 @@ const styles = StyleSheet.create({
 		color: colors.textSecondary,
 	},
 	errorText: {
-		fontSize: 18,
-		fontWeight: "bold",
-		color: colors.error,
-		textAlign: "center",
-		marginBottom: 8,
-	},
-	errorSubtext: {
 		fontSize: 16,
-		color: colors.textSecondary,
+		color: colors.error,
 		textAlign: "center",
 	},
 });
