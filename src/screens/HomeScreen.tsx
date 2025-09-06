@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { CocktailCard } from "../components/cocktail/CocktailCard";
 import { SearchBar } from "../components/search/SearchBar";
-import { useFavorites } from "../hooks/useFavorites";
+import { useFavorites } from "../hooks/useFavorite";
 import { useSearch } from "../hooks/useSearch";
 import type { RootStackParamList } from "../navigation/AppNavigator";
 import { useSearchCocktailsQuery } from "../store/api/cocktailApi";
