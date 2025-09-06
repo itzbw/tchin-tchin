@@ -1,4 +1,4 @@
-export const COLORS = {
+export const colors = {
 	primary: "#007AFF",
 	secondary: "#FF6B6B",
 	background: "#f8f9fa",
@@ -6,6 +6,7 @@ export const COLORS = {
 	text: "#333333",
 	textSecondary: "#666666",
 	border: "#e9ecef",
+	error: "#cc1414ff",
 };
 
 export const SPACING = {
