@@ -8,9 +8,10 @@ import {
 	Text,
 	View,
 } from "react-native";
-import type { RootStackParamList } from "../navigation/AppNavigator";
 import { useGetCocktailByIdQuery } from "../store/api/cocktailApi";
 import { colors } from "../styles/colors";
+import type { Ingredient } from "../types/cocktail";
+import type { RootStackParamList } from "../types/navigation";
 
 type CocktailDetailRouteProp = RouteProp<RootStackParamList, "CocktailDetail">;
 
@@ -20,6 +21,26 @@ export const CocktailDetailScreen: React.FC = () => {
 	const { data, error, isLoading } = useGetCocktailByIdQuery(cocktailId);
 
 	const cocktail = data?.drinks?.[0];
+
+	const extractIngredients = (): Ingredient[] => {
+		if (!cocktail) return [];
+
+		const ingredients: Ingredient[] = [];
+		for (let i = 1; i <= 15; i++) {
+			const ingredient = cocktail[`strIngredient${i}`];
+			const measure = cocktail[`strMeasure${i}`];
+
+			if (ingredient?.trim()) {
+				ingredients.push({
+					ingredient: ingredient.trim(),
+					measure: measure?.trim() || "",
+				});
+			}
+		}
+		return ingredients;
+	};
+
+	const ingredients = extractIngredients();
 
 	if (isLoading) {
 		return (
@@ -34,16 +55,18 @@ export const CocktailDetailScreen: React.FC = () => {
 		return (
 			<View style={styles.centerContainer}>
 				<Text style={styles.errorText}>Failed to load cocktail details</Text>
+				<Text style={styles.errorSubtext}>Please try again</Text>
 			</View>
 		);
 	}
 
 	return (
-		<ScrollView style={styles.container}>
+		<ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 			<View style={styles.imageContainer}>
 				<Image
 					source={{ uri: cocktail.strDrinkThumb }}
 					style={styles.cocktailImage}
+					resizeMode="cover"
 				/>
 			</View>
 
@@ -57,7 +80,26 @@ export const CocktailDetailScreen: React.FC = () => {
 					<View style={styles.tag}>
 						<Text style={styles.tagText}>{cocktail.strAlcoholic}</Text>
 					</View>
+					{cocktail.strGlass && (
+						<View style={styles.tag}>
+							<Text style={styles.tagText}>{cocktail.strGlass}</Text>
+						</View>
+					)}
 				</View>
+
+				{ingredients.length > 0 && (
+					<View style={styles.section}>
+						<Text style={styles.sectionTitle}>Ingredients</Text>
+						{ingredients.map((item, index) => (
+							<View key={index} style={styles.ingredientItem}>
+								<Text style={styles.ingredientText}>
+									{item.measure ? `${item.measure} ` : ""}
+									<Text style={styles.ingredientName}>{item.ingredient}</Text>
+								</Text>
+							</View>
+						))}
+					</View>
+				)}
 
 				<View style={styles.section}>
 					<Text style={styles.sectionTitle}>Instructions</Text>
@@ -83,7 +125,7 @@ const styles = StyleSheet.create({
 	},
 	imageContainer: {
 		alignItems: "center",
-		paddingVertical: 20,
+		paddingVertical: 24,
 		backgroundColor: colors.white,
 	},
 	cocktailImage: {
@@ -105,6 +147,7 @@ const styles = StyleSheet.create({
 	},
 	tagsContainer: {
 		flexDirection: "row",
+		flexWrap: "wrap",
 		justifyContent: "center",
 		marginBottom: 24,
 	},
@@ -129,6 +172,26 @@ const styles = StyleSheet.create({
 		color: colors.text,
 		marginBottom: 12,
 	},
+	ingredientItem: {
+		backgroundColor: colors.white,
+		padding: 12,
+		borderRadius: 8,
+		marginBottom: 8,
+		// Simple shadow
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.1,
+		shadowRadius: 2,
+		elevation: 2,
+	},
+	ingredientText: {
+		fontSize: 16,
+		color: colors.textSecondary,
+	},
+	ingredientName: {
+		fontWeight: "600",
+		color: colors.text,
+	},
 	instructionsText: {
 		fontSize: 16,
 		lineHeight: 24,
@@ -136,6 +199,11 @@ const styles = StyleSheet.create({
 		backgroundColor: colors.white,
 		padding: 16,
 		borderRadius: 12,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.1,
+		shadowRadius: 2,
+		elevation: 2,
 	},
 	loadingText: {
 		marginTop: 12,
@@ -143,8 +211,15 @@ const styles = StyleSheet.create({
 		color: colors.textSecondary,
 	},
 	errorText: {
-		fontSize: 16,
+		fontSize: 18,
+		fontWeight: "bold",
 		color: colors.error,
+		textAlign: "center",
+		marginBottom: 8,
+	},
+	errorSubtext: {
+		fontSize: 16,
+		color: colors.textSecondary,
 		textAlign: "center",
 	},
 });

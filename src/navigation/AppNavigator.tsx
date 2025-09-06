@@ -1,8 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type React from "react";
 import { CocktailDetailScreen } from "../screens/CocktailDetailScreen";
-import type { RootStackParamList } from "../types/navigation";
 import { TabNavigator } from "./TabNavigator";
+
+export type RootStackParamList = {
+	Main: undefined;
+	CocktailDetail: { cocktailId: string };
+};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,7 +21,10 @@ export const AppNavigator: React.FC = () => {
 			<Stack.Screen
 				name="CocktailDetail"
 				component={CocktailDetailScreen}
-				options={{ title: "Cocktail Details" }}
+				options={{
+					title: "Cocktail Details",
+					headerTitleAlign: "center",
+				}}
 			/>
 		</Stack.Navigator>
 	);
