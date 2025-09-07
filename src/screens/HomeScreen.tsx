@@ -22,12 +22,14 @@ import {
 } from "../store/api/cocktailApi";
 import type { Theme } from "../styles/themes";
 import type { Cocktail } from "../types/cocktail";
+import { responsiveSpacing, responsiveTypography } from "../utils/responsive";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const HomeScreen: React.FC = () => {
 	const navigation = useNavigation<NavigationProp>();
 	const { theme } = useTheme();
+
 	const {
 		searchInput,
 		setSearchInput,
@@ -134,7 +136,7 @@ export const HomeScreen: React.FC = () => {
 					placeholder="Search cocktails..."
 				/>
 
-				{/* Suggestions dropdown - removed header text */}
+				{/* Suggestions dropdown */}
 				{showSuggestions && suggestions.length > 0 && (
 					<View style={styles.suggestionsContainer}>
 						{suggestions.map((suggestion, index) =>
@@ -175,9 +177,9 @@ const getStyles = (theme: Theme) =>
 			backgroundColor: theme.colors.background,
 		},
 		searchContainer: {
-			paddingHorizontal: 16,
-			paddingTop: 16,
-			paddingBottom: 8,
+			paddingHorizontal: responsiveSpacing.lg,
+			paddingTop: responsiveSpacing.lg,
+			paddingBottom: responsiveSpacing.sm,
 			zIndex: 1,
 		},
 		suggestionsContainer: {
@@ -192,8 +194,8 @@ const getStyles = (theme: Theme) =>
 			overflow: "hidden",
 		},
 		suggestionItem: {
-			paddingHorizontal: 16,
-			paddingVertical: 12,
+			paddingHorizontal: responsiveSpacing.lg,
+			paddingVertical: responsiveSpacing.md,
 			borderBottomWidth: 1,
 			borderBottomColor: theme.colors.border,
 		},
@@ -201,65 +203,65 @@ const getStyles = (theme: Theme) =>
 			borderBottomWidth: 0,
 		},
 		suggestionName: {
-			fontSize: 16,
+			fontSize: responsiveTypography.base,
 			fontWeight: "500",
 			color: theme.colors.text,
 			marginBottom: 2,
 		},
 		suggestionCategory: {
-			fontSize: 14,
+			fontSize: responsiveTypography.sm,
 			color: theme.colors.textSecondary,
 		},
 		loadingContainer: {
 			flex: 1,
 			justifyContent: "center",
 			alignItems: "center",
-			padding: 20,
+			padding: responsiveSpacing.xl,
 		},
 		loadingText: {
-			marginTop: 12,
-			fontSize: 16,
+			marginTop: responsiveSpacing.md,
+			fontSize: responsiveTypography.base,
 			color: theme.colors.textSecondary,
 		},
 		errorContainer: {
 			flex: 1,
 			justifyContent: "center",
 			alignItems: "center",
-			padding: 20,
+			padding: responsiveSpacing.xl,
 		},
 		errorTitle: {
-			fontSize: 20,
+			fontSize: responsiveTypography.xl,
 			fontWeight: "bold",
 			color: theme.colors.error,
 			textAlign: "center",
-			marginBottom: 8,
+			marginBottom: responsiveSpacing.sm,
 		},
 		errorSubtext: {
-			fontSize: 16,
+			fontSize: responsiveTypography.base,
 			color: theme.colors.textSecondary,
 			textAlign: "center",
 		},
 		listContent: {
-			paddingHorizontal: 16,
-			paddingBottom: 20,
+			paddingHorizontal: responsiveSpacing.lg,
+			paddingBottom: responsiveSpacing.xl,
 		},
 		emptyContainer: {
 			flex: 1,
 			justifyContent: "center",
 			alignItems: "center",
-			paddingHorizontal: 40,
-			paddingVertical: 40,
+			paddingHorizontal: responsiveSpacing.xxxl,
+			paddingVertical: responsiveSpacing.xxxl,
 			marginTop: 60,
 		},
 		emptyTitle: {
-			fontSize: 20,
+			fontSize: responsiveTypography.xl,
 			fontWeight: "bold",
 			color: theme.colors.text,
 			textAlign: "center",
-			marginBottom: 8,
+			marginBottom: responsiveSpacing.sm,
 		},
 		emptySubtext: {
-			fontSize: 16,
+			fontSize: responsiveTypography.base,
 			color: theme.colors.textSecondary,
 			textAlign: "center",
 			lineHeight: 24,

@@ -15,6 +15,7 @@ import { useFavorites } from "../hooks/useFavorite";
 import type { Theme } from "../styles/themes";
 import type { Cocktail } from "../types/cocktail";
 import type { TabParamList } from "../types/navigation";
+import { responsiveSpacing, responsiveTypography } from "../utils/responsive";
 
 type NavigationProp = BottomTabNavigationProp<TabParamList>;
 
@@ -102,45 +103,45 @@ const getStyles = (theme: Theme) =>
 		},
 		header: {
 			backgroundColor: theme.colors.surface,
-			paddingHorizontal: 20,
-			paddingVertical: 16,
+			paddingHorizontal: responsiveSpacing.xl,
+			paddingVertical: responsiveSpacing.lg,
 			borderBottomWidth: 1,
 			borderBottomColor: theme.colors.border,
 		},
 		headerText: {
-			fontSize: 18,
+			fontSize: responsiveTypography.lg,
 			fontWeight: "600",
 			color: theme.colors.text,
 		},
 		listContent: {
-			paddingHorizontal: 16,
-			paddingTop: 16,
+			paddingHorizontal: responsiveSpacing.lg,
+			paddingTop: responsiveSpacing.lg,
 		},
 		emptyContainer: {
 			flex: 1,
 			justifyContent: "center",
 			alignItems: "center",
-			padding: 40,
+			padding: responsiveSpacing.xxxl,
 			backgroundColor: theme.colors.background,
 		},
 		emptyTitle: {
-			fontSize: 24,
+			fontSize: responsiveTypography.xxl,
 			fontWeight: "bold",
 			color: theme.colors.text,
 			textAlign: "center",
-			marginBottom: 12,
+			marginBottom: responsiveSpacing.md,
 		},
 		emptySubtitle: {
-			fontSize: 16,
+			fontSize: responsiveTypography.base,
 			color: theme.colors.textSecondary,
 			textAlign: "center",
 			lineHeight: 24,
-			marginBottom: 32,
+			marginBottom: responsiveSpacing.xxxl,
 		},
 		exploreButton: {
 			backgroundColor: theme.colors.primary,
-			paddingHorizontal: 24,
-			paddingVertical: 12,
+			paddingHorizontal: responsiveSpacing.xxl,
+			paddingVertical: responsiveSpacing.md,
 			borderRadius: 25,
 			shadowColor: "#000",
 			shadowOffset: { width: 0, height: 2 },
@@ -150,7 +151,7 @@ const getStyles = (theme: Theme) =>
 		},
 		exploreButtonText: {
 			color: theme.colors.white,
-			fontSize: 16,
+			fontSize: responsiveTypography.base,
 			fontWeight: "600",
 		},
 	});

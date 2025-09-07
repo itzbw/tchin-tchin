@@ -4,6 +4,11 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import type { Theme } from "../../styles/themes";
 import type { Cocktail } from "../../types/cocktail";
+import {
+	responsiveSize,
+	responsiveSpacing,
+	responsiveTypography,
+} from "../../utils/responsive";
 
 interface CocktailCardProps {
 	cocktail: Cocktail;
@@ -50,7 +55,7 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 					>
 						<Ionicons
 							name={isFavorite ? "heart" : "heart-outline"}
-							size={24}
+							size={responsiveSize(24, 28)}
 							color={
 								isFavorite ? theme.colors.secondary : theme.colors.textSecondary
 							}
@@ -59,7 +64,7 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 				) : (
 					<Ionicons
 						name="chevron-forward"
-						size={24}
+						size={responsiveSize(24, 28)}
 						color={theme.colors.textSecondary}
 					/>
 				)}
@@ -73,9 +78,9 @@ const getStyles = (theme: Theme) =>
 		container: {
 			flexDirection: "row",
 			backgroundColor: theme.colors.surface,
-			borderRadius: 12,
-			padding: 16,
-			marginVertical: 6,
+			borderRadius: responsiveSize(12, 16),
+			padding: responsiveSpacing.lg,
+			marginVertical: responsiveSpacing.sm,
 			alignItems: "center",
 			shadowColor: "#000",
 			shadowOffset: { width: 0, height: 2 },
@@ -84,31 +89,31 @@ const getStyles = (theme: Theme) =>
 			elevation: 3,
 		},
 		image: {
-			width: 60,
-			height: 60,
-			borderRadius: 8,
-			marginRight: 16,
+			width: responsiveSize(60, 80),
+			height: responsiveSize(60, 80),
+			borderRadius: responsiveSize(8, 12),
+			marginRight: responsiveSpacing.lg,
 		},
 		info: {
 			flex: 1,
 		},
 		name: {
-			fontSize: 18,
+			fontSize: responsiveTypography.lg,
 			fontWeight: "bold",
 			color: theme.colors.text,
-			marginBottom: 4,
+			marginBottom: responsiveSpacing.xs,
 		},
 		category: {
-			fontSize: 14,
+			fontSize: responsiveTypography.sm,
 			color: theme.colors.primary,
 			marginBottom: 2,
 			fontWeight: "500",
 		},
 		type: {
-			fontSize: 14,
+			fontSize: responsiveTypography.sm,
 			color: theme.colors.textSecondary,
 		},
 		favoriteButton: {
-			padding: 8,
+			padding: responsiveSpacing.sm,
 		},
 	});
