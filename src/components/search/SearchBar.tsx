@@ -1,9 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import type React from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
-import { colors } from "../../styles/colors";
-import { layout, spacing } from "../../styles/spacing";
-import { typography } from "../../styles/typography";
+import { useTheme } from "../../context/ThemeContext";
+import type { Theme } from "../../styles/themes";
 
 interface SearchBarProps {
 	value: string;
@@ -20,18 +19,21 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 	onClear,
 	placeholder = "Search cocktails...",
 }) => {
+	const { theme } = useTheme();
+	const styles = getStyles(theme);
+
 	return (
 		<View style={styles.container}>
 			<Ionicons
 				name="search"
 				size={20}
-				color={colors.textSecondary}
+				color={theme.colors.textSecondary}
 				style={styles.searchIcon}
 			/>
 			<TextInput
 				style={styles.input}
 				placeholder={placeholder}
-				placeholderTextColor={colors.textSecondary}
+				placeholderTextColor={theme.colors.textSecondary}
 				value={value}
 				onChangeText={onChangeText}
 				onSubmitEditing={onSubmitEditing}
@@ -44,7 +46,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 					<Ionicons
 						name="close-circle"
 						size={20}
-						color={colors.textSecondary}
+						color={theme.colors.textSecondary}
 					/>
 				</TouchableOpacity>
 			)}
@@ -52,27 +54,31 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: "row",
-		alignItems: "center",
-		backgroundColor: colors.white,
-		borderRadius: layout.borderRadius.full,
-		paddingHorizontal: spacing.lg,
-		paddingVertical: spacing.md,
-		...layout.shadow.md,
-	},
-	searchIcon: {
-		marginRight: spacing.sm,
-	},
-	input: {
-		flex: 1,
-		fontSize: typography.sizes.base,
-		color: colors.text,
-		fontWeight: typography.weights.normal,
-	},
-	clearButton: {
-		marginLeft: spacing.sm,
-		padding: 4,
-	},
-});
+const getStyles = (theme: Theme) =>
+	StyleSheet.create({
+		container: {
+			flexDirection: "row",
+			alignItems: "center",
+			backgroundColor: theme.colors.surface,
+			borderRadius: 25,
+			paddingHorizontal: 16,
+			paddingVertical: 12,
+			shadowColor: "#000",
+			shadowOffset: { width: 0, height: 2 },
+			shadowOpacity: 0.1,
+			shadowRadius: 4,
+			elevation: 3,
+		},
+		searchIcon: {
+			marginRight: 8,
+		},
+		input: {
+			flex: 1,
+			fontSize: 16,
+			color: theme.colors.text,
+		},
+		clearButton: {
+			marginLeft: 8,
+			padding: 4,
+		},
+	});

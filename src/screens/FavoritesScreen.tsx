@@ -1,5 +1,5 @@
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type React from "react";
 import { useCallback } from "react";
 import {
@@ -10,23 +10,34 @@ import {
 	View,
 } from "react-native";
 import { CocktailCard } from "../components/cocktail/CocktailCard";
+import { useTheme } from "../context/ThemeContext";
 import { useFavorites } from "../hooks/useFavorite";
-import type { RootStackParamList } from "../navigation/AppNavigator";
-import { colors } from "../styles/colors";
+import type { Theme } from "../styles/themes";
 import type { Cocktail } from "../types/cocktail";
+import type { TabParamList } from "../types/navigation";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type NavigationProp = BottomTabNavigationProp<TabParamList>;
 
 export const FavoritesScreen: React.FC = () => {
 	const navigation = useNavigation<NavigationProp>();
+	const { theme } = useTheme();
 	const { favorites, isFavorite, toggleFavorite } = useFavorites();
+
+	const styles = getStyles(theme);
 
 	const handleCocktailPress = useCallback(
 		(cocktailId: string) => {
-			navigation.navigate("CocktailDetail", { cocktailId });
+			const parentNavigation = navigation.getParent();
+			if (parentNavigation) {
+				parentNavigation.navigate("CocktailDetail", { cocktailId });
+			}
 		},
 		[navigation],
 	);
+
+	const handleExplorePress = useCallback(() => {
+		navigation.navigate("Home");
+	}, [navigation]);
 
 	const renderFavoriteItem = useCallback(
 		({ item }: { item: Cocktail }) => (
@@ -52,7 +63,7 @@ export const FavoritesScreen: React.FC = () => {
 				</Text>
 				<TouchableOpacity
 					style={styles.exploreButton}
-					onPress={() => navigation.navigate("Main")}
+					onPress={handleExplorePress}
 				>
 					<Text style={styles.exploreButtonText}>Explore Cocktails</Text>
 				</TouchableOpacity>
@@ -74,7 +85,6 @@ export const FavoritesScreen: React.FC = () => {
 				renderItem={renderFavoriteItem}
 				contentContainerStyle={styles.listContent}
 				showsVerticalScrollIndicator={false}
-				// Basic performance optimizations
 				initialNumToRender={6}
 				maxToRenderPerBatch={6}
 				windowSize={5}
@@ -84,62 +94,63 @@ export const FavoritesScreen: React.FC = () => {
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: colors.background,
-	},
-	header: {
-		backgroundColor: colors.white,
-		paddingHorizontal: 20,
-		paddingVertical: 16,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.border,
-	},
-	headerText: {
-		fontSize: 18,
-		fontWeight: "600",
-		color: colors.text,
-	},
-	listContent: {
-		paddingHorizontal: 16,
-		paddingTop: 16,
-	},
-	emptyContainer: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		padding: 40,
-		backgroundColor: colors.background,
-	},
-	emptyTitle: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: colors.text,
-		textAlign: "center",
-		marginBottom: 12,
-	},
-	emptySubtitle: {
-		fontSize: 16,
-		color: colors.textSecondary,
-		textAlign: "center",
-		lineHeight: 24,
-		marginBottom: 32,
-	},
-	exploreButton: {
-		backgroundColor: colors.primary,
-		paddingHorizontal: 24,
-		paddingVertical: 12,
-		borderRadius: 25,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 3,
-	},
-	exploreButtonText: {
-		color: colors.white,
-		fontSize: 16,
-		fontWeight: "600",
-	},
-});
+const getStyles = (theme: Theme) =>
+	StyleSheet.create({
+		container: {
+			flex: 1,
+			backgroundColor: theme.colors.background,
+		},
+		header: {
+			backgroundColor: theme.colors.surface,
+			paddingHorizontal: 20,
+			paddingVertical: 16,
+			borderBottomWidth: 1,
+			borderBottomColor: theme.colors.border,
+		},
+		headerText: {
+			fontSize: 18,
+			fontWeight: "600",
+			color: theme.colors.text,
+		},
+		listContent: {
+			paddingHorizontal: 16,
+			paddingTop: 16,
+		},
+		emptyContainer: {
+			flex: 1,
+			justifyContent: "center",
+			alignItems: "center",
+			padding: 40,
+			backgroundColor: theme.colors.background,
+		},
+		emptyTitle: {
+			fontSize: 24,
+			fontWeight: "bold",
+			color: theme.colors.text,
+			textAlign: "center",
+			marginBottom: 12,
+		},
+		emptySubtitle: {
+			fontSize: 16,
+			color: theme.colors.textSecondary,
+			textAlign: "center",
+			lineHeight: 24,
+			marginBottom: 32,
+		},
+		exploreButton: {
+			backgroundColor: theme.colors.primary,
+			paddingHorizontal: 24,
+			paddingVertical: 12,
+			borderRadius: 25,
+			shadowColor: "#000",
+			shadowOffset: { width: 0, height: 2 },
+			shadowOpacity: 0.1,
+			shadowRadius: 4,
+			elevation: 3,
+		},
+		exploreButtonText: {
+			color: theme.colors.white,
+			fontSize: 16,
+			fontWeight: "600",
+		},
+	});

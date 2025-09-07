@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type React from "react";
+import { useTheme } from "../context/ThemeContext";
 import { CocktailDetailScreen } from "../screens/CocktailDetailScreen";
 import { TabNavigator } from "./TabNavigator";
 
@@ -11,8 +12,20 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const AppNavigator: React.FC = () => {
+	const { theme } = useTheme();
+
 	return (
-		<Stack.Navigator>
+		<Stack.Navigator
+			screenOptions={{
+				headerStyle: {
+					backgroundColor: theme.colors.surface,
+				},
+				headerTintColor: theme.colors.text,
+				headerTitleStyle: {
+					color: theme.colors.text,
+				},
+			}}
+		>
 			<Stack.Screen
 				name="Main"
 				component={TabNavigator}

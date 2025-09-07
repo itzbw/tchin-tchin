@@ -1,13 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import type React from "react";
+import { StyleSheet, View } from "react-native";
+import { ThemeToggle } from "../components/common/ThemeToggle";
+import { useTheme } from "../context/ThemeContext";
 import { FavoritesScreen } from "../screens/FavoritesScreen";
 import { HomeScreen } from "../screens/HomeScreen";
+import type { Theme } from "../styles/themes";
 import type { TabParamList } from "../types/navigation";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 export const TabNavigator: React.FC = () => {
+	const { theme } = useTheme();
+	const styles = getStyles(theme);
+
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
@@ -22,10 +29,17 @@ export const TabNavigator: React.FC = () => {
 
 					return <Ionicons name={iconName} size={size} color={color} />;
 				},
-				tabBarActiveTintColor: "#007AFF",
-				tabBarInactiveTintColor: "gray",
-				headerStyle: { backgroundColor: "#f8f9fa" },
+				tabBarActiveTintColor: theme.colors.primary,
+				tabBarInactiveTintColor: theme.colors.textSecondary,
+				tabBarStyle: styles.tabBar,
+				headerStyle: styles.header,
+				headerTintColor: theme.colors.text,
 				headerTitleAlign: "center",
+				headerRight: () => (
+					<View style={styles.headerRight}>
+						<ThemeToggle />
+					</View>
+				),
 			})}
 		>
 			<Tab.Screen
@@ -41,3 +55,17 @@ export const TabNavigator: React.FC = () => {
 		</Tab.Navigator>
 	);
 };
+
+const getStyles = (theme: Theme) =>
+	StyleSheet.create({
+		tabBar: {
+			backgroundColor: theme.colors.surface,
+			borderTopColor: theme.colors.border,
+		},
+		header: {
+			backgroundColor: theme.colors.surface,
+		},
+		headerRight: {
+			marginRight: 16,
+		},
+	});

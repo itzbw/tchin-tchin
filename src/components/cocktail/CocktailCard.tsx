@@ -1,9 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { colors } from "../../styles/colors";
-import { layout, spacing } from "../../styles/spacing";
-import { typography } from "../../styles/typography";
+import { useTheme } from "../../context/ThemeContext";
+import type { Theme } from "../../styles/themes";
 import type { Cocktail } from "../../types/cocktail";
 
 interface CocktailCardProps {
@@ -22,6 +21,9 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 		isFavorite = false,
 		onFavoriteToggle,
 	}) => {
+		const { theme } = useTheme();
+		const styles = getStyles(theme);
+
 		return (
 			<TouchableOpacity
 				style={styles.container}
@@ -49,14 +51,16 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 						<Ionicons
 							name={isFavorite ? "heart" : "heart-outline"}
 							size={24}
-							color={isFavorite ? colors.secondary : colors.textSecondary}
+							color={
+								isFavorite ? theme.colors.secondary : theme.colors.textSecondary
+							}
 						/>
 					</TouchableOpacity>
 				) : (
 					<Ionicons
 						name="chevron-forward"
 						size={24}
-						color={colors.textSecondary}
+						color={theme.colors.textSecondary}
 					/>
 				)}
 			</TouchableOpacity>
@@ -64,42 +68,47 @@ export const CocktailCard: React.FC<CocktailCardProps> = React.memo(
 	},
 );
 
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: "row",
-		backgroundColor: colors.white,
-		borderRadius: layout.borderRadius.lg,
-		padding: spacing.lg,
-		marginVertical: spacing.sm,
-		alignItems: "center",
-		...layout.shadow.md,
-	},
-	image: {
-		width: 60,
-		height: 60,
-		borderRadius: layout.borderRadius.md,
-		marginRight: spacing.lg,
-	},
-	info: {
-		flex: 1,
-	},
-	name: {
-		fontSize: typography.sizes.lg,
-		fontWeight: typography.weights.bold,
-		color: colors.text,
-		marginBottom: spacing.xs,
-	},
-	category: {
-		fontSize: typography.sizes.sm,
-		color: colors.primary,
-		marginBottom: 3,
-		fontWeight: typography.weights.medium,
-	},
-	type: {
-		fontSize: typography.sizes.sm,
-		color: colors.textSecondary,
-	},
-	favoriteButton: {
-		padding: spacing.sm,
-	},
-});
+const getStyles = (theme: Theme) =>
+	StyleSheet.create({
+		container: {
+			flexDirection: "row",
+			backgroundColor: theme.colors.surface,
+			borderRadius: 12,
+			padding: 16,
+			marginVertical: 6,
+			alignItems: "center",
+			shadowColor: "#000",
+			shadowOffset: { width: 0, height: 2 },
+			shadowOpacity: 0.1,
+			shadowRadius: 4,
+			elevation: 3,
+		},
+		image: {
+			width: 60,
+			height: 60,
+			borderRadius: 8,
+			marginRight: 16,
+		},
+		info: {
+			flex: 1,
+		},
+		name: {
+			fontSize: 18,
+			fontWeight: "bold",
+			color: theme.colors.text,
+			marginBottom: 4,
+		},
+		category: {
+			fontSize: 14,
+			color: theme.colors.primary,
+			marginBottom: 2,
+			fontWeight: "500",
+		},
+		type: {
+			fontSize: 14,
+			color: theme.colors.textSecondary,
+		},
+		favoriteButton: {
+			padding: 8,
+		},
+	});
