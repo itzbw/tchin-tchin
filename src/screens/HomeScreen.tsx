@@ -66,7 +66,6 @@ export const HomeScreen: React.FC = () => {
 
 	const handleSuggestionPress = useCallback(
 		(cocktail: Cocktail) => {
-			console.log("Navigating to cocktail:", cocktail.strDrink);
 			hideSuggestions();
 			navigation.navigate("CocktailDetail", { cocktailId: cocktail.idDrink });
 		},

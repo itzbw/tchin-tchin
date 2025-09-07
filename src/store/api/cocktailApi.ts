@@ -11,14 +11,12 @@ export const cocktailApi = createApi({
 		searchCocktails: builder.query<CocktailsResponse, string>({
 			query: (searchTerm) => `search.php?s=${searchTerm}`,
 			transformResponse: (response: CocktailsResponse) => {
-				console.log("Search API Response:", JSON.stringify(response, null, 2));
 				return response;
 			},
 		}),
 		getCocktailById: builder.query<CocktailsResponse, string>({
 			query: (id) => `lookup.php?i=${id}`,
 			transformResponse: (response: CocktailsResponse) => {
-				console.log("Detail API Response:", JSON.stringify(response, null, 2));
 				return response;
 			},
 		}),
@@ -30,13 +28,11 @@ export const cocktailApi = createApi({
 						0,
 						SEARCH_CONFIG.MAX_SUGGESTIONS,
 					);
-					console.log("Limited suggestions:", limitedDrinks.length, "drinks");
 					return {
 						...response,
 						drinks: limitedDrinks,
 					};
 				}
-				console.log("No drinks found for suggestions");
 				return response;
 			},
 		}),

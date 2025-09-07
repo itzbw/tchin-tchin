@@ -24,17 +24,11 @@ export const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
 	const { theme } = useTheme();
 	const styles = getStyles(theme);
 
-	console.log("SearchSuggestions render:", {
-		isVisible,
-		suggestionsCount: suggestions.length,
-	});
-
 	if (!isVisible || suggestions.length === 0) {
 		return null;
 	}
 
 	const handleSuggestionPress = (suggestion: string) => {
-		console.log("Suggestion pressed:", suggestion);
 		onSuggestionPress(suggestion);
 	};
 

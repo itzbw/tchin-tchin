@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import type React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { ThemeToggle } from "../components/common/ThemeToggle";
 import { useTheme } from "../context/ThemeContext";
 import { FavoritesScreen } from "../screens/FavoritesScreen";
@@ -27,8 +27,14 @@ export const TabNavigator: React.FC = () => {
 						iconName = focused ? "heart" : "heart-outline";
 					}
 
-					return <Ionicons name={iconName} size={size} color={color} />;
+					return (
+						<View style={styles.iconContainer}>
+							<Ionicons name={iconName} size={size} color={color} />
+							<Text style={[styles.iconLabel, { color }]}>{route.name}</Text>
+						</View>
+					);
 				},
+				tabBarShowLabel: false,
 				tabBarActiveTintColor: theme.colors.primary,
 				tabBarInactiveTintColor: theme.colors.textSecondary,
 				tabBarStyle: styles.tabBar,
@@ -67,5 +73,14 @@ const getStyles = (theme: Theme) =>
 		},
 		headerRight: {
 			marginRight: 16,
+		},
+		iconContainer: {
+			flexDirection: "row",
+			alignItems: "center",
+		},
+		iconLabel: {
+			marginLeft: 8,
+			fontSize: 14,
+			fontWeight: "500",
 		},
 	});
