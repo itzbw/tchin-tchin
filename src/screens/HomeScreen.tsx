@@ -3,26 +3,28 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type React from "react";
 import { useCallback } from "react";
 import {
-	ActivityIndicator,
 	FlatList,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { CocktailCard } from "../components/cocktail/CocktailCard";
-import { SearchBar } from "../components/search/SearchBar";
+import {
+	CocktailCard,
+	EmptyState,
+	ErrorMessage,
+	LoadingSpinner,
+	SearchBar,
+} from "../components";
 import { useTheme } from "../context/ThemeContext";
-import { useFavorites } from "../hooks/useFavorite";
-import { useSearch } from "../hooks/useSearch";
-import type { RootStackParamList } from "../navigation/AppNavigator";
+import { useFavorites, useSearch } from "../hooks";
 import {
 	useGetSearchSuggestionsQuery,
 	useSearchCocktailsQuery,
-} from "../store/api/cocktailApi";
+} from "../store";
 import type { Theme } from "../styles/themes";
-import type { Cocktail } from "../types/cocktail";
-import { responsiveSpacing, responsiveTypography } from "../utils/responsive";
+import type { Cocktail, RootStackParamList } from "../types";
+import { responsiveSpacing, responsiveTypography } from "../utils";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -108,19 +110,12 @@ export const HomeScreen: React.FC = () => {
 		[handleSuggestionPress, styles, suggestions.length],
 	);
 
-	const EmptyComponent = () => (
-		<View style={styles.emptyContainer}>
-			<Text style={styles.emptyTitle}>No cocktails found</Text>
-			<Text style={styles.emptySubtext}>Try searching for something else</Text>
-		</View>
-	);
-
 	if (error) {
 		return (
-			<View style={styles.errorContainer}>
-				<Text style={styles.errorTitle}>Failed to load cocktails</Text>
-				<Text style={styles.errorSubtext}>Please check your connection</Text>
-			</View>
+			<ErrorMessage
+				title="Failed to load cocktails"
+				subtitle="Please check your connection"
+			/>
 		);
 	}
 
@@ -147,10 +142,7 @@ export const HomeScreen: React.FC = () => {
 			</View>
 
 			{isLoading ? (
-				<View style={styles.loadingContainer}>
-					<ActivityIndicator size="large" color={theme.colors.primary} />
-					<Text style={styles.loadingText}>Loading cocktails...</Text>
-				</View>
+				<LoadingSpinner text="Loading cocktails..." />
 			) : (
 				<FlatList
 					data={cocktails}
@@ -158,7 +150,13 @@ export const HomeScreen: React.FC = () => {
 					renderItem={renderCocktailItem}
 					contentContainerStyle={styles.listContent}
 					showsVerticalScrollIndicator={false}
-					ListEmptyComponent={EmptyComponent}
+					ListEmptyComponent={() => (
+						<EmptyState
+							icon="search"
+							title="No cocktails found"
+							subtitle="Try searching for something else"
+						/>
+					)}
 					initialNumToRender={6}
 					maxToRenderPerBatch={6}
 					windowSize={5}
@@ -212,58 +210,8 @@ const getStyles = (theme: Theme) =>
 			fontSize: responsiveTypography.sm,
 			color: theme.colors.textSecondary,
 		},
-		loadingContainer: {
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			padding: responsiveSpacing.xl,
-		},
-		loadingText: {
-			marginTop: responsiveSpacing.md,
-			fontSize: responsiveTypography.base,
-			color: theme.colors.textSecondary,
-		},
-		errorContainer: {
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			padding: responsiveSpacing.xl,
-		},
-		errorTitle: {
-			fontSize: responsiveTypography.xl,
-			fontWeight: "bold",
-			color: theme.colors.error,
-			textAlign: "center",
-			marginBottom: responsiveSpacing.sm,
-		},
-		errorSubtext: {
-			fontSize: responsiveTypography.base,
-			color: theme.colors.textSecondary,
-			textAlign: "center",
-		},
 		listContent: {
 			paddingHorizontal: responsiveSpacing.lg,
 			paddingBottom: responsiveSpacing.xl,
-		},
-		emptyContainer: {
-			flex: 1,
-			justifyContent: "center",
-			alignItems: "center",
-			paddingHorizontal: responsiveSpacing.xxxl,
-			paddingVertical: responsiveSpacing.xxxl,
-			marginTop: 60,
-		},
-		emptyTitle: {
-			fontSize: responsiveTypography.xl,
-			fontWeight: "bold",
-			color: theme.colors.text,
-			textAlign: "center",
-			marginBottom: responsiveSpacing.sm,
-		},
-		emptySubtext: {
-			fontSize: responsiveTypography.base,
-			color: theme.colors.textSecondary,
-			textAlign: "center",
-			lineHeight: 24,
 		},
 	});

@@ -11,11 +11,10 @@ import {
 	View,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
-import { useFavorites } from "../hooks/useFavorite";
-import type { RootStackParamList } from "../navigation/AppNavigator";
-import { useGetCocktailByIdQuery } from "../store/api/cocktailApi";
+import { useFavorites } from "../hooks";
+import { useGetCocktailByIdQuery } from "../store";
 import type { Theme } from "../styles/themes";
-import type { Ingredient } from "../types/cocktail";
+import type { Ingredient, RootStackParamList } from "../types";
 
 type CocktailDetailRouteProp = RouteProp<RootStackParamList, "CocktailDetail">;
 
@@ -117,8 +116,8 @@ export const CocktailDetailScreen: React.FC = () => {
 				{ingredients.length > 0 && (
 					<View style={styles.section}>
 						<Text style={styles.sectionTitle}>Ingredients</Text>
-						{ingredients.map((item, index) => (
-							<View key={index} style={styles.ingredientItem}>
+						{ingredients.map((item) => (
+							<View key={item.ingredient} style={styles.ingredientItem}>
 								<Text style={styles.ingredientText}>
 									{item.measure ? `${item.measure} ` : ""}
 									<Text style={styles.ingredientName}>{item.ingredient}</Text>

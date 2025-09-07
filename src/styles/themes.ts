@@ -30,4 +30,18 @@ export const darkTheme = {
 	},
 } as const;
 
-export type Theme = typeof lightTheme;
+export type Theme = {
+	colors: {
+		primary: string;
+		secondary: string;
+		background: string;
+		surface: string;
+		text: string;
+		textSecondary: string;
+		border: string;
+		white: string;
+		error: string;
+		success: string;
+		warning: string;
+	};
+};

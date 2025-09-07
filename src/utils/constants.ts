@@ -1,7 +1,3 @@
-import { colors } from "../styles/colors";
-
-export const COLORS = colors;
-
 export const SIZES = {
 	icon: {
 		sm: 16,
