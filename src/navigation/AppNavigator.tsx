@@ -20,10 +20,11 @@ export const AppNavigator: React.FC = () => {
 				headerStyle: {
 					backgroundColor: theme.colors.surface,
 				},
-				headerTintColor: theme.colors.text,
+				headerTintColor: theme.colors.primary,
 				headerTitleStyle: {
 					color: theme.colors.text,
 				},
+				headerShadowVisible: true,
 			}}
 		>
 			<Stack.Screen
@@ -37,6 +38,7 @@ export const AppNavigator: React.FC = () => {
 				options={{
 					title: "Cocktail Details",
 					headerTitleAlign: "center",
+					headerBackVisible: true,
 				}}
 			/>
 		</Stack.Navigator>

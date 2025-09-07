@@ -7,6 +7,7 @@ import {
 	FlatList,
 	StyleSheet,
 	Text,
+	TouchableOpacity,
 	View,
 } from "react-native";
 import { CocktailCard } from "../components/cocktail/CocktailCard";
@@ -15,7 +16,10 @@ import { useTheme } from "../context/ThemeContext";
 import { useFavorites } from "../hooks/useFavorite";
 import { useSearch } from "../hooks/useSearch";
 import type { RootStackParamList } from "../navigation/AppNavigator";
-import { useSearchCocktailsQuery } from "../store/api/cocktailApi";
+import {
+	useGetSearchSuggestionsQuery,
+	useSearchCocktailsQuery,
+} from "../store/api/cocktailApi";
 import type { Theme } from "../styles/themes";
 import type { Cocktail } from "../types/cocktail";
 
@@ -24,19 +28,45 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const HomeScreen: React.FC = () => {
 	const navigation = useNavigation<NavigationProp>();
 	const { theme } = useTheme();
-	const { searchInput, setSearchInput, searchTerm, handleSearch, handleClear } =
-		useSearch();
+	const {
+		searchInput,
+		setSearchInput,
+		searchTerm,
+		debouncedInput,
+		showSuggestions,
+		handleSearch,
+		handleClear,
+		hideSuggestions,
+	} = useSearch();
 	const { isFavorite, toggleFavorite } = useFavorites();
+
 	const { data, error, isLoading } = useSearchCocktailsQuery(searchTerm);
+
+	const { data: suggestionsData } = useGetSearchSuggestionsQuery(
+		debouncedInput,
+		{
+			skip: debouncedInput.length < 3 || !showSuggestions,
+		},
+	);
 
 	const styles = getStyles(theme);
 	const cocktails = data?.drinks || [];
+	const suggestions = suggestionsData?.drinks || [];
 
 	const handleCocktailPress = useCallback(
 		(cocktailId: string) => {
 			navigation.navigate("CocktailDetail", { cocktailId });
 		},
 		[navigation],
+	);
+
+	const handleSuggestionPress = useCallback(
+		(cocktail: Cocktail) => {
+			console.log("Navigating to cocktail:", cocktail.strDrink);
+			hideSuggestions();
+			navigation.navigate("CocktailDetail", { cocktailId: cocktail.idDrink });
+		},
+		[navigation, hideSuggestions],
 	);
 
 	const renderCocktailItem = useCallback(
@@ -53,6 +83,28 @@ export const HomeScreen: React.FC = () => {
 	);
 
 	const keyExtractor = useCallback((item: Cocktail) => item.idDrink, []);
+
+	const renderSuggestion = useCallback(
+		(cocktail: Cocktail, index: number) => (
+			<TouchableOpacity
+				key={cocktail.idDrink}
+				style={[
+					styles.suggestionItem,
+					index === suggestions.length - 1 && styles.lastSuggestionItem,
+				]}
+				onPress={() => handleSuggestionPress(cocktail)}
+				activeOpacity={0.7}
+			>
+				<Text style={styles.suggestionName} numberOfLines={1}>
+					{cocktail.strDrink}
+				</Text>
+				<Text style={styles.suggestionCategory} numberOfLines={1}>
+					{cocktail.strCategory}
+				</Text>
+			</TouchableOpacity>
+		),
+		[handleSuggestionPress, styles, suggestions.length],
+	);
 
 	const EmptyComponent = () => (
 		<View style={styles.emptyContainer}>
@@ -78,8 +130,18 @@ export const HomeScreen: React.FC = () => {
 					onChangeText={setSearchInput}
 					onSubmitEditing={handleSearch}
 					onClear={handleClear}
+					onBlur={hideSuggestions}
 					placeholder="Search cocktails..."
 				/>
+
+				{/* Suggestions dropdown - removed header text */}
+				{showSuggestions && suggestions.length > 0 && (
+					<View style={styles.suggestionsContainer}>
+						{suggestions.map((suggestion, index) =>
+							renderSuggestion(suggestion, index),
+						)}
+					</View>
+				)}
 			</View>
 
 			{isLoading ? (
@@ -99,6 +161,7 @@ export const HomeScreen: React.FC = () => {
 					maxToRenderPerBatch={6}
 					windowSize={5}
 					removeClippedSubviews={true}
+					keyboardShouldPersistTaps="handled"
 				/>
 			)}
 		</View>
@@ -115,6 +178,37 @@ const getStyles = (theme: Theme) =>
 			paddingHorizontal: 16,
 			paddingTop: 16,
 			paddingBottom: 8,
+			zIndex: 1,
+		},
+		suggestionsContainer: {
+			backgroundColor: theme.colors.surface,
+			borderRadius: 12,
+			marginTop: 4,
+			shadowColor: "#000",
+			shadowOffset: { width: 0, height: 2 },
+			shadowOpacity: 0.1,
+			shadowRadius: 4,
+			elevation: 3,
+			overflow: "hidden",
+		},
+		suggestionItem: {
+			paddingHorizontal: 16,
+			paddingVertical: 12,
+			borderBottomWidth: 1,
+			borderBottomColor: theme.colors.border,
+		},
+		lastSuggestionItem: {
+			borderBottomWidth: 0,
+		},
+		suggestionName: {
+			fontSize: 16,
+			fontWeight: "500",
+			color: theme.colors.text,
+			marginBottom: 2,
+		},
+		suggestionCategory: {
+			fontSize: 14,
+			color: theme.colors.textSecondary,
 		},
 		loadingContainer: {
 			flex: 1,

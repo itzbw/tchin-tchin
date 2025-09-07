@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { CocktailsResponse } from "../../types/cocktail";
+import { SEARCH_CONFIG } from "../../utils/constants";
 
 export const cocktailApi = createApi({
 	reducerPath: "cocktailApi",
@@ -21,7 +22,24 @@ export const cocktailApi = createApi({
 				return response;
 			},
 		}),
-
+		getSearchSuggestions: builder.query<CocktailsResponse, string>({
+			query: (searchTerm) => `search.php?s=${searchTerm}`,
+			transformResponse: (response: CocktailsResponse) => {
+				if (response.drinks) {
+					const limitedDrinks = response.drinks.slice(
+						0,
+						SEARCH_CONFIG.MAX_SUGGESTIONS,
+					);
+					console.log("Limited suggestions:", limitedDrinks.length, "drinks");
+					return {
+						...response,
+						drinks: limitedDrinks,
+					};
+				}
+				console.log("No drinks found for suggestions");
+				return response;
+			},
+		}),
 		getRandomCocktails: builder.query<CocktailsResponse, void>({
 			query: () => "search.php?s=",
 		}),
@@ -37,6 +55,7 @@ export const cocktailApi = createApi({
 export const {
 	useSearchCocktailsQuery,
 	useGetCocktailByIdQuery,
+	useGetSearchSuggestionsQuery,
 	useGetRandomCocktailsQuery,
 	useGetCocktailsByCategoryQuery,
 	useGetCategoriesQuery,

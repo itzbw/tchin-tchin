@@ -14,3 +14,13 @@ export const SIZES = {
 		detail: 150,
 	},
 } as const;
+
+export const SEARCH_CONFIG = {
+	DEBOUNCE_DELAY: 300,
+	MIN_SUGGESTION_LENGTH: 3,
+	MAX_SUGGESTIONS: 3,
+	SUGGESTION_BLUR_DELAY: 150,
+	NAVIGATE_ON_SUGGESTION_CLICK: true,
+} as const;
+
+export const DEFAULT_SEARCH_TERM = "margarita";

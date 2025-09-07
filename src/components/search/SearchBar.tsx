@@ -9,6 +9,8 @@ interface SearchBarProps {
 	onChangeText: (text: string) => void;
 	onSubmitEditing: () => void;
 	onClear: () => void;
+	onFocus?: () => void;
+	onBlur?: () => void;
 	placeholder?: string;
 }
 
@@ -17,10 +19,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 	onChangeText,
 	onSubmitEditing,
 	onClear,
+	onFocus,
+	onBlur,
 	placeholder = "Search cocktails...",
 }) => {
 	const { theme } = useTheme();
 	const styles = getStyles(theme);
+
+	const handleBlur = () => {
+		setTimeout(() => {
+			onBlur?.();
+		}, 150);
+	};
 
 	return (
 		<View style={styles.container}>
@@ -37,6 +47,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 				value={value}
 				onChangeText={onChangeText}
 				onSubmitEditing={onSubmitEditing}
+				onFocus={onFocus}
+				onBlur={handleBlur}
 				returnKeyType="search"
 				autoCapitalize="none"
 				autoCorrect={false}
