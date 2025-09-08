@@ -72,15 +72,16 @@ const getStyles = (theme: Theme) =>
 			backgroundColor: theme.colors.surface,
 		},
 		headerRight: {
-			marginRight: 16,
+			marginRight: 0,
 		},
 		iconContainer: {
 			flexDirection: "row",
 			alignItems: "center",
+			width: 100,
 		},
 		iconLabel: {
-			marginLeft: 8,
-			fontSize: 14,
+			marginLeft: 4,
+			fontSize: 12,
 			fontWeight: "500",
 		},
 	});
