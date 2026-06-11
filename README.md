@@ -14,7 +14,7 @@ The app uses the public API [TheCocktailDB](https://www.thecocktaildb.com/api.ph
 - ✅ **React Native + TypeScript + Expo**: Built with Expo
 - ✅ **React Redux**: State management with Redux
 - ✅ **Tab Navigator**: 2 navigation Tabs
-- ✅ **FlatList**: List with `removeClippedSubviews` and pagination
+- ✅ **FlatList**: List with `removeClippedSubviews`
 - ✅ **Detail Page**: Navigation to cocktail details
 - ✅ **Favorites System**: Add/remove favorites functionality
 
@@ -116,7 +116,7 @@ npm start
 
 ### Home Page 
 - **Smart search**: Real-time suggestions after 3+ charcters input
-- **Optimized FlatList**: `removeClippedSubviews`, pagination, `windowSize`
+- **Optimized FlatList**: `removeClippedSubviews`,  `windowSize`
 - **Managed states**: Loading, error, empty with dedicated components
 - **Performance**: Memoization with `React.memo` and `useCallback`
 
